@@ -46,7 +46,7 @@ class UserModelSerializer(ModelSerializer):
 class EmployeeModelSerializer(ModelSerializer):
     class Meta:
         model = Employee
-        fields = "__all__"
+        fields = ('id', 'emp_name', 'img', 'salary', 'age')
 
         extra_kwargs = {
             "emp_name": {

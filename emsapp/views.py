@@ -39,3 +39,8 @@ class EmployeeGenericAPIView(ListModelMixin, CreateModelMixin, GenericAPIView):
         response = self.list(request, *args, **kwargs)
 
         return APIResponse(200, True, results=response.data)
+
+    def post(self, request, *args, **kwargs):
+        emp_obj = self.create(request, *args, **kwargs)
+
+        return APIResponse(200, True, results=emp_obj.data)
