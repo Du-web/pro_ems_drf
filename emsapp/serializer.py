@@ -31,3 +31,13 @@ class UserModelSerializer(ModelSerializer):
         if user:
             raise exceptions.ValidationError("用户名已存在")
         return attrs
+
+    def validate_password(self, attrs):
+        request = self.context.get('request')
+        re_pwd = request.data.get('re_pwd')
+        if re_pwd == attrs:
+            if len(attrs) < 6:
+                raise exceptions.ValidationError('密码长度不能小于6')
+            return attrs
+        else:
+            raise exceptions.ValidationError('两次密码不一致')
