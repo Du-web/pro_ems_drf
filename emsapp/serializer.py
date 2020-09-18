@@ -41,3 +41,20 @@ class UserModelSerializer(ModelSerializer):
             return attrs
         else:
             raise exceptions.ValidationError('两次密码不一致')
+
+
+class EmployeeModelSerializer(ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = "__all__"
+
+        extra_kwargs = {
+            "emp_name": {
+                'required': True,
+                'min_length': 2,
+                "error_messages": {
+                    'required': '用户名必填',
+                    'min_length': '用户长度不够'
+                }
+            }
+        }
