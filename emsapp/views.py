@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from emsapp.serializer import UserModelSerializer, EmployeeModelSerializer
@@ -31,14 +31,16 @@ class UserAPIView(APIView):
         return APIResponse(400, False)
 
 
-class EmployeeGenericAPIView(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericAPIView):
+class EmployeeGenericAPIView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeModelSerializer
     lookup_field = 'id'
 
     def get(self, request, *args, **kwargs):
+        if 'id' in kwargs:
+            response = self.retrieve(request, *args, **kwargs)
+            return APIResponse(200, True, results=response.data)
         response = self.list(request, *args, **kwargs)
-
         return APIResponse(200, True, results=response.data)
 
     def post(self, request, *args, **kwargs):
