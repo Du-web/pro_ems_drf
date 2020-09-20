@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from emsapp.serializer import UserModelSerializer, EmployeeModelSerializer
@@ -31,7 +31,7 @@ class UserAPIView(APIView):
         return APIResponse(400, False)
 
 
-class EmployeeGenericAPIView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, GenericAPIView):
+class EmployeeGenericAPIView(ListModelMixin, RetrieveModelMixin, CreateModelMixin, DestroyModelMixin, UpdateModelMixin, GenericAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeModelSerializer
     lookup_field = 'id'
@@ -44,11 +44,16 @@ class EmployeeGenericAPIView(ListModelMixin, RetrieveModelMixin, CreateModelMixi
         return APIResponse(200, True, results=response.data)
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         emp_obj = self.create(request, *args, **kwargs)
-
         return APIResponse(200, True, results=emp_obj.data)
 
     def delete(self, request, *args, **kwargs):
         self.destroy(request, *args, **kwargs)
         emp_list = self.list(request, *args, **kwargs)
         return APIResponse(200, True, results=emp_list.data)
+
+    def patch(self, request, *args, **kwargs):
+        print(request.data)
+        self.partial_update(request, *args, **kwargs)
+        return APIResponse(200, True)
