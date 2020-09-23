@@ -1,18 +1,17 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
 
 
-class User(models.Model):
+class User(AbstractUser):
     gender_choices = (
         (0, "男"),
         (1, "女"),
         (2, "未知"),
     )
 
-    username = models.CharField(max_length=80)
     real_name = models.CharField(max_length=80)
-    password = models.CharField(max_length=80)
     gender = models.SmallIntegerField(default=0, choices=gender_choices)
     status = models.SmallIntegerField(default=False)
     register_time = models.DateTimeField(auto_now_add=True)

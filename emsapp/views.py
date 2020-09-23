@@ -10,7 +10,7 @@ from utils.response import APIResponse
 from emsapp.models import User, Employee
 
 
-class UserAPIView(APIView):
+class UserRegister(APIView):
 
     def post(self, request, *args, **kwargs):
         user_data = request.data
@@ -20,10 +20,15 @@ class UserAPIView(APIView):
         user_obj = ser.save()
         return APIResponse(200, True, results=UserModelSerializer(user_obj).data)
 
-    def get(self, request, *args, **kwargs):
 
-        name = request.query_params.get("username")
-        pwd = request.query_params.get("password")
+class UserLogin(APIView):
+
+    def post(self, request, *args, **kwargs):
+        permission_classes = []
+        authentication_classes = []
+        print(request.data)
+        name = request.data.get("username")
+        pwd = request.data.get("password")
         user_obj = User.objects.filter(username=name, password=pwd).first()
         if user_obj:
             data = UserModelSerializer(user_obj).data
